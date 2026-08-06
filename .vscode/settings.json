@@ -1,3 +1,4 @@
 {
-  "dotnet.defaultSolution": "eAgenda.slnx"
+  "dotnet.defaultSolution": "eAgenda.slnx",
+   "dotnet.unitTests.runSettingsPath": "test\\Eagenda.Test.E2E\\playwright.runsettings"
 }
