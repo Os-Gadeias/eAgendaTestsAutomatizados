@@ -16,4 +16,8 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
+    <ItemGroup>
+    <ProjectReference Include="../../src/eAgenda.Dominio/eAgenda.Dominio.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -21,8 +21,14 @@ public class Categoria : EntidadeBase<Categoria>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Titulo) || Titulo.Length < 2 || Titulo.Length > 100)
-            erros.Add("O campo \"Título\" deve conter entre 2 e 100 caracteres.");
+        if (string.IsNullOrWhiteSpace(Titulo))
+            erros.Add("O campo \"Título\" deve ser preenchido!");
+
+        else if (Titulo.Length < 2)
+            erros.Add("O campo \"Titulo\" deve conter mais que 2 caracteres!");
+
+        else if (Titulo.Length > 100)
+            erros.Add("O campo \"Titulo\" deve comter menos que 100 caracteres!");
 
         return erros;
     }
