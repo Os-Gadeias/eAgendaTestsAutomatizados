@@ -29,12 +29,44 @@ public class ContatoTestE2E : E2ETestsBase
     public async Task Cadastro_ComEmail_Duplicado_RetornaErro()
     {
         await CadastrarUsuario();
-        await CadastrarUsuario();
+
+        await Page.GotoAsync(UrlBase + "/Contato/Cadastrar");
+
+        await Page.GetByLabel("Nome").FillAsync("Victor Jeremias");
+        await Page.GetByLabel("E-mail").FillAsync("thiagokovalski5@gmail.com"); //email ja cadastrado
+        await Page.GetByLabel("Telefone").FillAsync("(49) 98888-8888");
+        await Page.GetByLabel("Cargo").FillAsync("Pleno");
+        await Page.GetByLabel("Empresa").FillAsync("Google");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
 
         string rotaFinal = new Uri(Page.Url).AbsolutePath;
         Assert.AreEqual("/Contato/Cadastrar", rotaFinal);
         await Expect(Page.GetByText("Já existe um contato com este email.")).ToBeVisibleAsync();
 
+    }
+    [TestMethod]
+    public async Task EditarContato_ComDadosValidos_NaoRetornaErro()
+    {
+        await CadastrarUsuario();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Editar" }).ClickAsync();
+
+        await Page.GetByLabel("Nome").FillAsync("Victor Jeremias");
+        await Page.GetByLabel("E-mail").FillAsync("jeremias@gmail.com");
+        await Page.GetByLabel("Telefone").FillAsync("(49) 98888-8888");
+        await Page.GetByLabel("Cargo").FillAsync("Pleno");
+        await Page.GetByLabel("Empresa").FillAsync("Google");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        string rotaFinal = new Uri(Page.Url).AbsolutePath;
+        Assert.AreEqual("/Contato/Listar", rotaFinal);
+        await Expect(Page.GetByText("Victor Jeremias")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("jeremias@gmail.com")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("(49) 98888-8888")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Pleno")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Google")).ToBeVisibleAsync();
     }
 
     private async Task CadastrarUsuario()
