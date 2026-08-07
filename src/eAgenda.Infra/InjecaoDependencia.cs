@@ -11,6 +11,7 @@ using eAgenda.Infra.Modulos.ModuloCompromisso;
 using eAgenda.Infra.Modulos.ModuloContato;
 using eAgenda.Infra.Modulos.ModuloDespesa;
 using eAgenda.Infra.Modulos.ModuloTarefa;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,10 +24,11 @@ public static class InjecaoDependencia
     public static void AddInfraRepositories(
         this IServiceCollection services,
         IConfiguration configuration,
-        ILoggingBuilder logging
+        ILoggingBuilder logging,
+        IWebHostEnvironment environment
     )
     {
-        services.AddSerilogLogger(configuration, logging);
+        services.AddSerilogLogger(configuration, logging, environment);
 
         services.AddDbContext<EAgendaDbContext>(options =>
        {

@@ -4,28 +4,30 @@ namespace Eagenda.Test.E2E.Compartilhado;
 
 public abstract class E2ETestsBase : PageTest
 {
-    protected TestApplicationFactory Aplicacao = null!;
+    private TestApplicationFactory aplicacao = null!;
+
     protected string UrlBase { get; set; } = string.Empty;
 
     [TestInitialize]
     public async Task InicializarAplicacao()
     {
-        Aplicacao = new TestApplicationFactory();
+        aplicacao = new TestApplicationFactory();
 
-        UrlBase = Aplicacao.UrlBase!;
+        UrlBase = aplicacao.UrlBase;
     }
+
     [TestCleanup]
-    public async Task LiberarAplicacao()
+    public async Task EncerrarAplicacao()
     {
         try
         {
-            if (Aplicacao is not null)
-                await Aplicacao.DisposeAsync();
-
+            if (aplicacao is not null)
+                await aplicacao.DisposeAsync();
         }
         finally
         {
-            Aplicacao = null!;
+            aplicacao = null!;
         }
     }
+
 }

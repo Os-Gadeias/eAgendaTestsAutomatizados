@@ -1,5 +1,6 @@
 
 using eAgenda.Infra.Compartilhado.Orm;
+using eAgenda.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -12,7 +13,7 @@ using Microsoft.Playwright;
 
 namespace Eagenda.Test.E2E.Compartilhado;
 
-public class TestApplicationFactory : WebApplicationFactory<Program>
+public class TestApplicationFactory : WebApplicationFactory<Entrypoint>
 {
     private readonly string nomeBanco;
 

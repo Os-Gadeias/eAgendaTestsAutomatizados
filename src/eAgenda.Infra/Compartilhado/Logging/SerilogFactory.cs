@@ -2,17 +2,19 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace eAgenda.Infra.Compartilhado.Logging;
 
 public static class SerilogFactory
 {
-    public static Logger Create(IConfiguration configuration)
+    public static Logger Create(IConfiguration configuration, IWebHostEnvironment environment)
     {
         string caminhoAppData = Environment
             .GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        string caminhoDiretorio = Path.Combine(caminhoAppData, "eAgenda");
+        string caminhoDiretorio = Path.Combine(caminhoAppData, "GeradorDeProvas");
 
         Directory.CreateDirectory(caminhoDiretorio);
 
@@ -29,14 +31,28 @@ public static class SerilogFactory
                 restrictedToMinimumLevel: LogEventLevel.Error
             );
 
+        if (!environment.IsEnvironment("Testing"))
+        {
+            Directory.CreateDirectory(caminhoDiretorio);
+
+            loggerConfiguration.WriteTo.File(
+                caminhoLogs,
+                rollingInterval: RollingInterval.Day,
+                restrictedToMinimumLevel: LogEventLevel.Error
+            );
+        }
+
         NewRelicOptions newRelicOptions = configuration
             .GetSection(NewRelicOptions.SectionName)
             .Get<NewRelicOptions>() ?? new NewRelicOptions();
 
+        if (!newRelicOptions.Enabled)
+            return loggerConfiguration.CreateLogger();
+
         if (string.IsNullOrWhiteSpace(newRelicOptions.LicenseKey))
         {
             throw new InvalidOperationException(
-                "A chave de licença do NewRelic não foi configurada. Configure Logging:NewRelic:LicenseKey."
+                "A chave de licença do NewRelic não foi configurada. Configure Infra:NewRelic:LicenseKey."
             );
         }
 

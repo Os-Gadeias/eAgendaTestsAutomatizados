@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Eagenda.Test.E2E.Compartilhado;
 using Microsoft.Playwright.MSTest;
 
 namespace Eagenda.Test.E2E;
