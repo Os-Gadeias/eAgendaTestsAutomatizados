@@ -64,4 +64,13 @@ public class ContatoTest
         Assert.HasCount(1, erros);
         Assert.AreEqual("O campo \"Nome\" deve conter entre 2 e 100 caracteres.", erros.First());
     }
+    [TestMethod]
+    public void Cadastrar_Contato_Com_NomeLimiteMaximo_NaoRetornaErro()
+    {
+        Contato contato = new(new string('a', 100), "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(0, erros);
+    }
 }
