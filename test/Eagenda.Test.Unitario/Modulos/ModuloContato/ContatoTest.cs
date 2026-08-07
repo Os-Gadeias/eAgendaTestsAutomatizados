@@ -73,4 +73,24 @@ public class ContatoTest
 
         Assert.HasCount(0, erros);
     }
+    [TestMethod]
+    public void Cadastrar_Contato_ComEmail_ComFormatoInvalido_RetornaErro()
+    {
+        Contato contato = new(new string('a', 100), "sememail", "(49) 98888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"E-mail\" deve conter um endereço de e-mail válido.", erros.First());
+    }
+    [TestMethod]
+    public void Cadastrar_Contato_ComEmail_SemDominio_RetornaErro()
+    {
+        Contato contato = new(new string('a', 100), "Thiago@gmail", "(49) 98888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"E-mail\" deve conter um endereço de e-mail válido.", erros.First());
+    }
 }
