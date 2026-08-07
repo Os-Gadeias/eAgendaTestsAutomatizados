@@ -35,4 +35,23 @@ public class ContatoTest
         Assert.AreEqual("O campo \"E-mail\" deve conter um endereço de e-mail válido.", erros[1]);
         Assert.AreEqual("O campo \"Telefone\" deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX.", erros[2]);
     }
+    [TestMethod]
+    public void Cadastrar_Contato_Com_NomePequeno_RetornaErros()
+    {
+        Contato contato = new("T", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Nome\" deve conter entre 2 e 100 caracteres.", erros.First());
+    }
+    [TestMethod]
+    public void Cadastrar_Contato_Com_ComNomeTamanhoMinimo_NaoRetornaErros()
+    {
+        Contato contato = new("Th", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(0, erros);
+    }
 }
