@@ -23,4 +23,16 @@ public class ContatoTest
 
         Assert.HasCount(0, erros);
     }
+    [TestMethod]
+    public void Cadatrar_Contato_SemCampos_Obrigatorios_CarregaErros()
+    {
+        Contato contato = new(string.Empty, string.Empty, string.Empty, null, null);
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(3, erros);
+        Assert.AreEqual("O campo \"Nome\" deve conter entre 2 e 100 caracteres.", erros[0]);
+        Assert.AreEqual("O campo \"E-mail\" deve conter um endereço de e-mail válido.", erros[1]);
+        Assert.AreEqual("O campo \"Telefone\" deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX.", erros[2]);
+    }
 }
