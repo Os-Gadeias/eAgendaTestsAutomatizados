@@ -4,7 +4,7 @@ namespace Eagenda.Test.E2E.Compartilhado;
 
 public abstract class E2ETestsBase : PageTest
 {
-    private TestApplicationFactory aplicacao = null!;
+    protected TestApplicationFactory aplicacao = null!;
 
     protected string UrlBase { get; set; } = string.Empty;
 
