@@ -68,7 +68,6 @@ public class ContatoTestE2E : E2ETestsBase
         await Expect(Page.GetByText("Pleno")).ToBeVisibleAsync();
         await Expect(Page.GetByText("Google")).ToBeVisibleAsync();
     }
-
     private async Task CadastrarUsuario()
     {
         await Page.GotoAsync(UrlBase + "/Contato/Cadastrar");

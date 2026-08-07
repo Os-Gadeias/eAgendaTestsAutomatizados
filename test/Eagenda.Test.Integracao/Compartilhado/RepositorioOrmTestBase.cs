@@ -27,12 +27,6 @@ public abstract class RepositorioOrmTestBase
     public void InicializarContexto()
     {
         dbContext = CriarDbContext();
-    }
-
-    [TestCleanup]
-    public void DescartarContexto()
-    {
-        dbContext.Dispose();
 
         // Categoria
         repositorioCategoria = new RepositorioCategoriaEmOrm(dbContext);
@@ -83,6 +77,12 @@ public abstract class RepositorioOrmTestBase
             foreach (Tarefa t in tarefas)
                 repositorioTarefa.Cadastrar(t);
         });
+    }
+
+    [TestCleanup]
+    public void DescartarContexto()
+    {
+        dbContext.Dispose();
     }
 
     private static EAgendaDbContext CriarDbContext()

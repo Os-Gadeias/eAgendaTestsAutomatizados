@@ -16,5 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\eAgenda.Infra\eAgenda.Infra.csproj" />
     <ProjectReference Include="..\..\src\eAgenda.Dominio\eAgenda.Dominio.csproj" />
+    <ProjectReference Include="..\..\src\eAgenda.Aplicacao\eAgenda.Aplicacao.csproj" />
   </ItemGroup>
 </Project>
