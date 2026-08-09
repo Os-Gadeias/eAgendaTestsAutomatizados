@@ -1,6 +1,7 @@
 using eAgenda.Aplicacao.Modulos.ModuloContato;
 using eAgenda.Dominio.Modulos.ModuloCompromisso;
 using eAgenda.Dominio.Modulos.ModuloContato;
+using FizzWare.NBuilder;
 using FluentResults;
 using Moq;
 
@@ -204,5 +205,28 @@ public class ServicoContatoTest
 
         Assert.IsTrue(resultado.IsSuccess);
         repositorioContato.Verify(r => r.Excluir(It.IsAny<Guid>()), Times.Once);
+    }
+    [TestMethod]
+    public void Excluir_ContatoCom_Compromisso_Atrelado_RetornaErro()
+    {
+        Mock<IRepositorioContato> repositorioContato = new();
+        Mock<IRepositorioCompromisso> repositorioCompromisso = new();
+        ServicoContato servicoContato = new(repositorioContato.Object, repositorioCompromisso.Object);
+
+        Contato contato = new("Victor Jeremias", "VictorJeremias@gmail.com", "(49) 98888-7777", "Senior", "Google");
+        Compromisso compromisso = Builder<Compromisso>
+        .CreateNew()
+        .With(c => c.Contato = contato)
+        .Build();
+
+        repositorioContato.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(contato);
+        repositorioCompromisso.Setup(r => r.SelecionarTodos()).Returns([compromisso]);
+        repositorioContato.Setup(r => r.Excluir(It.IsAny<Guid>())).Returns(false);
+
+        Result resultado = servicoContato.Excluir(contato.Id);
+
+        Assert.IsTrue(resultado.IsFailed);
+        Assert.Contains("Não é", resultado.Errors.First().Message);
+        repositorioContato.Verify(r => r.Excluir(It.IsAny<Guid>()), Times.Never);
     }
 }

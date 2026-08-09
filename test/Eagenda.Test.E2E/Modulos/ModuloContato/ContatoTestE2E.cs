@@ -69,7 +69,7 @@ public class ContatoTestE2E : E2ETestsBase
         await Expect(Page.GetByText("Google")).ToBeVisibleAsync();
     }
     [TestMethod]
-    public async Task ExcluirUsuario_Persiste_E_RemoveDaListagem()
+    public async Task ExcluirContato_Persiste_E_RemoveDaListagem()
     {
         await CadastrarUsuario();
 
@@ -84,6 +84,36 @@ public class ContatoTestE2E : E2ETestsBase
         await Expect(Page.GetByText("(49) 99999-9999")).Not.ToBeVisibleAsync();
         await Expect(Page.GetByText("senior")).Not.ToBeVisibleAsync();
         await Expect(Page.GetByText("NDD")).Not.ToBeVisibleAsync();
+    }
+    [TestMethod]
+    public async Task ExcluirContato_ComCompromissos_Vinculados_RetornaErro()
+    {
+        await CadastrarUsuario();
+
+        await Page.GotoAsync(UrlBase + "/Compromisso/Cadastrar");
+
+        await Page.GetByLabel("Assunto").FillAsync("Reuniao Uniplac");
+        await Page.GetByLabel("Hora de Início").FillAsync("15:30");
+        await Page.GetByLabel("Hora de Término").FillAsync("16:30");
+        await Page.GetByLabel("Local").FillAsync("Uniplac");
+        await Page.GetByLabel("Contato").SelectOptionAsync("Thiago Kovalski");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GotoAsync(UrlBase + "/Contato/Listar");
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Excluir" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        string rotaFinal = new Uri(Page.Url).AbsolutePath;
+        Assert.AreEqual("/Contato/Listar", rotaFinal);
+        await Expect(Page.GetByText("Thiago Kovalski")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("thiagokovalski5@gmail.com")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("(49) 99999-9999")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("senior")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("NDD")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Não é possível excluir este contato, pois ele possui compromissos vinculados.")).ToBeVisibleAsync();
     }
     private async Task CadastrarUsuario()
     {
