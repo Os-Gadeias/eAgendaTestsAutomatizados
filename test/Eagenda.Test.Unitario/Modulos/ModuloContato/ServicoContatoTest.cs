@@ -101,4 +101,20 @@ public class ServicoContatoTest
         repositorioContato.Verify(r => r.Cadastrar(It.IsAny<Contato>()), Times.Never);
 
     }
+    [TestMethod]
+    public void Cadastrar_ContatoComEmail_Duplicado_RetornaErro()
+    {
+        Mock<IRepositorioContato> repositorioContato = new();
+        Mock<IRepositorioCompromisso> repositorioCompromisso = new();
+
+        repositorioContato.Setup(r => r.SelecionarTodos()).Returns([new Contato("Victor Jeremias", "ThiagoKovalski@Gmail.com", "(49) 98888-7777", null, null)]);
+
+        ServicoContato servicoContato = new(repositorioContato.Object, repositorioCompromisso.Object);
+
+        Result resultado = servicoContato.Cadastrar(new("Thiago Kovalski", "ThiagoKovalski@Gmail.com", "(49) 98888-8888", null, null));
+
+        Assert.IsTrue(resultado.IsFailed);
+        Assert.AreEqual("Já existe um contato com este email.", resultado.Errors.First().Message);
+        repositorioContato.Verify(r => r.Cadastrar(It.IsAny<Contato>()), Times.Never);
+    }
 }
