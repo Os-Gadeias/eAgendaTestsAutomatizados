@@ -229,4 +229,34 @@ public class ServicoContatoTest
         Assert.Contains("Não é", resultado.Errors.First().Message);
         repositorioContato.Verify(r => r.Excluir(It.IsAny<Guid>()), Times.Never);
     }
+    [TestMethod]
+    public void Listar_Contatos_RetornaRegistros()
+    {
+        Mock<IRepositorioContato> repositorioContato = new();
+        Mock<IRepositorioCompromisso> repositorioCompromisso = new();
+
+        ServicoContato servicoContato = new(repositorioContato.Object, repositorioCompromisso.Object);
+
+        Contato contato = new("Victor Jeremias", "VictorJeremias@gmail.com", "(49) 98888-7777", "Senior", "Google");
+        Contato contato2 = new("Thiago Kovalski", "ThiagoK@gmail.com", "(49) 98888-8888", "Dev", "NDD");
+
+        repositorioContato.Setup(r => r.SelecionarTodos()).Returns([contato, contato2]);
+
+        List<ListarContatosDto> dtos = servicoContato.SelecionarTodos();
+
+        Assert.HasCount(2, dtos);
+
+        Assert.AreEqual("Victor Jeremias", dtos[0].Nome);
+        Assert.AreEqual("VictorJeremias@gmail.com", dtos[0].Email);
+        Assert.AreEqual("(49) 98888-7777", dtos[0].Telefone);
+        Assert.AreEqual("Senior", dtos[0].Cargo);
+        Assert.AreEqual("Google", dtos[0].Empresa);
+
+        Assert.AreEqual("Thiago Kovalski", dtos[1].Nome);
+        Assert.AreEqual("ThiagoK@gmail.com", dtos[1].Email);
+        Assert.AreEqual("(49) 98888-8888", dtos[1].Telefone);
+        Assert.AreEqual("Dev", dtos[1].Cargo);
+        Assert.AreEqual("NDD", dtos[1].Empresa);
+
+    }
 }

@@ -115,6 +115,36 @@ public class ContatoTestE2E : E2ETestsBase
         await Expect(Page.GetByText("NDD")).ToBeVisibleAsync();
         await Expect(Page.GetByText("Não é possível excluir este contato, pois ele possui compromissos vinculados.")).ToBeVisibleAsync();
     }
+    [TestMethod]
+    public async Task ListagemDeCpntatos_RetornaDadosNaTela()
+    {
+        await CadastrarUsuario();
+
+        await Page.GotoAsync(UrlBase + "/Contato/Cadastrar");
+
+        await Page.GetByLabel("Nome").FillAsync("Victor Jeremias");
+        await Page.GetByLabel("E-mail").FillAsync("Victor@gmail.com");
+        await Page.GetByLabel("Telefone").FillAsync("(49) 98888-7777");
+        await Page.GetByLabel("Cargo").FillAsync("Desenvolvedor");
+        await Page.GetByLabel("Empresa").FillAsync("Google");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        string rotaFinal = new Uri(Page.Url).AbsolutePath;
+        Assert.AreEqual("/Contato/Listar", rotaFinal);
+
+        await Expect(Page.GetByText("Thiago Kovalski")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("thiagokovalski5@gmail.com")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("(49) 99999-9999")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("senior")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("NDD")).ToBeVisibleAsync();
+
+        await Expect(Page.GetByText("Victor Jeremias")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Victor@gmail.com")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("(49) 98888-7777")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Desenvolvedor")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Google")).ToBeVisibleAsync();
+    }
     private async Task CadastrarUsuario()
     {
         await Page.GotoAsync(UrlBase + "/Contato/Cadastrar");
