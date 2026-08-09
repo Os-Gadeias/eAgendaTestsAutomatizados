@@ -41,8 +41,30 @@ public class RepositorioContatoOrmTest : RepositorioOrmTestBase
         Assert.AreEqual("Thiago Kovalski", contatoSelecionado.Nome);
         Assert.AreEqual("Thiago@gmail.com", contatoSelecionado.Email);
         Assert.AreEqual("(49) 98888-8888", contatoSelecionado.Telefone);
-        Assert.AreEqual("(49) 98888-8888", contatoSelecionado.Telefone);
         Assert.IsNull(contatoSelecionado.Cargo);
         Assert.IsNull(contatoSelecionado.Empresa);
+    }
+    [TestMethod]
+    public void Editar_Contato_Com_DadosValidos_Persiste()
+    {
+        Contato contato = new("Victor Jeremias", "Victor@gmail.com", "(49) 98888-8888", null, null);
+
+        repositorioContato.Cadastrar(contato);
+
+        Contato contatoEditado = new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-7777", "Dev", "NDD");
+
+        repositorioContato.Editar(contato.Id, contatoEditado);
+
+        dbContext.ChangeTracker.Clear();
+
+        Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
+
+        Assert.IsNotNull(contatoSelecionado);
+        Assert.AreEqual("Thiago Kovalski", contatoSelecionado.Nome);
+        Assert.AreEqual("Thiago@gmail.com", contatoSelecionado.Email);
+        Assert.AreEqual("(49) 98888-7777", contatoSelecionado.Telefone);
+        Assert.AreEqual("Dev", contatoSelecionado.Cargo);
+        Assert.AreEqual("NDD", contatoSelecionado.Empresa);
+
     }
 }

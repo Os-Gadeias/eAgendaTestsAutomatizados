@@ -113,4 +113,18 @@ public class ContatoTest
         Assert.HasCount(1, erros);
         Assert.AreEqual("O campo \"Telefone\" deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX.", erros.First());
     }
+    [TestMethod]
+    public void Editar_Contato_Com_DadosValidos_Persiste()
+    {
+        Contato contato = new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
+        Contato contatoAtualizado = new("Victor Jeremias", "VictorJeremias@gmail.com", "(49) 98888-7777", "Senior", "Google");
+
+        contato.Atualizar(contatoAtualizado);
+
+        Assert.AreEqual("Victor Jeremias", contato.Nome);
+        Assert.AreEqual("VictorJeremias@gmail.com", contato.Email);
+        Assert.AreEqual("(49) 98888-7777", contato.Telefone);
+        Assert.AreEqual("Senior", contato.Cargo);
+        Assert.AreEqual("Google", contato.Empresa);
+    }
 }
