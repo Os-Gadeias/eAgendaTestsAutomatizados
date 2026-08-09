@@ -87,7 +87,7 @@ public class RepositorioContatoOrmTest : RepositorioOrmTestBase
     [TestMethod]
     public void SelecionarTodos_RetornaDados()
     {
-        Contato contato = new("Victor Jeremias", "Victor@gmail.com", "(49) 98888-8888", null, null);
+        Contato contato = new("Victor Jeremias", "Victor@gmail.com", "(49) 98888-8888", "Desenvolvedor", "Google");
         repositorioContato.Cadastrar(contato);
 
         Contato contato2 = new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
@@ -98,6 +98,33 @@ public class RepositorioContatoOrmTest : RepositorioOrmTestBase
         Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
         Contato? contatoSelecionado2 = repositorioContato.SelecionarPorId(contato2.Id);
 
+        Assert.AreEqual("Victor Jeremias", contatoSelecionado!.Nome);
+        Assert.AreEqual("Victor@gmail.com", contatoSelecionado.Email);
+        Assert.AreEqual("(49) 98888-8888", contatoSelecionado.Telefone);
+        Assert.AreEqual("Desenvolvedor", contatoSelecionado.Cargo);
+        Assert.AreEqual("Google", contatoSelecionado.Empresa);
 
+        Assert.AreEqual("Thiago Kovalski", contatoSelecionado2!.Nome);
+        Assert.AreEqual("Thiago@gmail.com", contatoSelecionado2.Email);
+        Assert.AreEqual("(49) 98888-8888", contatoSelecionado2.Telefone);
+        Assert.AreEqual("Dev", contatoSelecionado2.Cargo);
+        Assert.AreEqual("NDD", contatoSelecionado2.Empresa);
+    }
+    [TestMethod]
+    public void Dados_SaoListados_Corretamente_NoVisualizar()
+    {
+        Contato contato = new("Victor Jeremias", "Victor@gmail.com", "(49) 98888-8888", "Desenvolvedor", "Google");
+        repositorioContato.Cadastrar(contato);
+
+        dbContext.ChangeTracker.Clear();
+
+        Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
+
+        Assert.IsNotNull(contatoSelecionado);
+        Assert.AreEqual("Victor Jeremias", contatoSelecionado.Nome);
+        Assert.AreEqual("Victor@gmail.com", contatoSelecionado.Email);
+        Assert.AreEqual("(49) 98888-8888", contatoSelecionado.Telefone);
+        Assert.AreEqual("Desenvolvedor", contatoSelecionado.Cargo);
+        Assert.AreEqual("Google", contatoSelecionado.Empresa);
     }
 }

@@ -257,6 +257,30 @@ public class ServicoContatoTest
         Assert.AreEqual("(49) 98888-8888", dtos[1].Telefone);
         Assert.AreEqual("Dev", dtos[1].Cargo);
         Assert.AreEqual("NDD", dtos[1].Empresa);
+    }
+    [TestMethod]
+    public void Dados_SaoListados_Corretamente_NoVisualizar()
+    {
+        Mock<IRepositorioContato> repositorioContato = new();
+        Mock<IRepositorioCompromisso> repositorioCompromisso = new();
 
+        repositorioContato.Setup(r => r.SelecionarTodos()).Returns([]);
+
+        ServicoContato servicoContato = new(repositorioContato.Object, repositorioCompromisso.Object);
+
+        Contato? contatoCadastrado = null!;
+
+        repositorioContato.Setup(r => r.Cadastrar(It.IsAny<Contato>())).Callback<Contato>(c => contatoCadastrado = c);
+
+        Result resultado = servicoContato.Cadastrar(new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD"));
+
+        Assert.IsTrue(resultado.IsSuccess);
+        Assert.IsNotNull(contatoCadastrado);
+        Assert.AreEqual("Thiago Kovalski", contatoCadastrado.Nome);
+        Assert.AreEqual("Thiago@gmail.com", contatoCadastrado.Email);
+        Assert.AreEqual("(49) 98888-8888", contatoCadastrado.Telefone);
+        Assert.AreEqual("Dev", contatoCadastrado.Cargo);
+        Assert.AreEqual("NDD", contatoCadastrado.Empresa);
+        repositorioContato.Verify(r => r.Cadastrar(It.IsAny<Contato>()), Times.Once);
     }
 }
