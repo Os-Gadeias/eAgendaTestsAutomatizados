@@ -84,4 +84,20 @@ public class RepositorioContatoOrmTest : RepositorioOrmTestBase
         Assert.IsTrue(conseguiuExcluir);
         Assert.IsNull(contatoSelecionado);
     }
+    [TestMethod]
+    public void SelecionarTodos_RetornaDados()
+    {
+        Contato contato = new("Victor Jeremias", "Victor@gmail.com", "(49) 98888-8888", null, null);
+        repositorioContato.Cadastrar(contato);
+
+        Contato contato2 = new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
+        repositorioContato.Cadastrar(contato2);
+
+        dbContext.ChangeTracker.Clear();
+
+        Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
+        Contato? contatoSelecionado2 = repositorioContato.SelecionarPorId(contato2.Id);
+
+
+    }
 }
