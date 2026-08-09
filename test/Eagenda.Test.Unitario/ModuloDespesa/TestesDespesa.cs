@@ -80,6 +80,21 @@ public sealed class TestesDespesa
     }
 
     [TestMethod]
+    public void Validar_ValorNegativo_DeveRetornar_ErroCorrespondente()
+    {
+        Categoria categoria = new Categoria("Carro");
+        Despesa despesa = new Despesa(new string('A', 22), DateTime.Now, -1, FormaPagamento.AVista, new List<Categoria> { categoria });
+
+        List<string> erros = despesa.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Valor\" n pode ser negativo",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
     public void Validar_SemFormaPagamento_DeveRetornar_ErroCorrespondente()
     {
         Categoria categoria = new Categoria("Carro");

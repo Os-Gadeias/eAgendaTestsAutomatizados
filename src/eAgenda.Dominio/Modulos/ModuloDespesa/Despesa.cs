@@ -46,8 +46,11 @@ public class Despesa : EntidadeBase<Despesa>
         if (DataOcorrencia == default)
             erros.Add("O campo \"Data de Ocorrência\" deve ser preenchido.");
 
-        if (Valor <= 0)
+        if (Valor == 0)
             erros.Add("O campo \"Valor\" deve ser maior que zero.");
+
+        else if (Valor < 0)
+            erros.Add("O campo \"Valor\" n pode ser negativo");
 
         if (!Enum.IsDefined(FormaPagamento))
             erros.Add("O campo \"Forma de Pagamento\" deve ser preenchido.");
