@@ -93,4 +93,24 @@ public class ContatoTest
         Assert.HasCount(1, erros);
         Assert.AreEqual("O campo \"E-mail\" deve conter um endereço de e-mail válido.", erros.First());
     }
+    [TestMethod]
+    public void Cadastrar_ContatoCom_TelefoneFixo_ComFormato_InvalidoRetornaErros()
+    {
+        Contato contato = new("Thiago Kovalski", "Thiago@gmail.com", "49 8888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Telefone\" deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX.", erros.First());
+    }
+    [TestMethod]
+    public void Cadastrar_ContatoCom_TelefoneCelular_ComFormato_InvalidoRetornaErros()
+    {
+        Contato contato = new("Thiago Kovalski", "Thiago@gmail.com", "49 98888-8888", "Dev", "NDD");
+
+        List<string> erros = contato.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Telefone\" deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX.", erros.First());
+    }
 }
