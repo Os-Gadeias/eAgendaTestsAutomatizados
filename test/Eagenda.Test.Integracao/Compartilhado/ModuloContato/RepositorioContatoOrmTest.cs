@@ -14,7 +14,6 @@ public class RepositorioContatoOrmTest : RepositorioOrmTestBase
         Contato contato = new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-8888", "Dev", "NDD");
 
         repositorioContato.Cadastrar(contato);
-
         dbContext.ChangeTracker.Clear();
 
         Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
