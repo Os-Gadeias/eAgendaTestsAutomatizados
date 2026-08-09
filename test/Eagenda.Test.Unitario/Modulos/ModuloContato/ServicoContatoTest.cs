@@ -170,4 +170,21 @@ public class ServicoContatoTest
         Assert.Contains("Já existe", resultado.Errors.First().Message);
         repositorioContato.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Contato>()), Times.Never);
     }
+    [TestMethod]
+    public void EditarContato_MantendoProprioEmail_E_Telefone_NaoRetornaErros()
+    {
+        Mock<IRepositorioContato> repositorioContato = new();
+        Mock<IRepositorioCompromisso> repositorioCompromisso = new();
+        ServicoContato servicoContato = new(repositorioContato.Object, repositorioCompromisso.Object);
+
+        Contato contato = new("Victor Jeremias", "VictorJeremias@gmail.com", "(49) 98888-7777", "Senior", "Google");
+
+        repositorioContato.Setup(r => r.SelecionarTodos()).Returns([contato]);
+        repositorioContato.Setup(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Contato>())).Returns(true);
+
+        Result resultado = servicoContato.Editar(new(contato.Id, "Victor Augusto", "VictorJeremias@gmail.com", "(49) 98888-7777", "Pleno", "NDD"));
+
+        Assert.IsTrue(resultado.IsSuccess);
+        repositorioContato.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Contato>()), Times.Once);
+    }
 }
