@@ -1,3 +1,4 @@
+using System.Formats.Cbor;
 using eAgenda.Dominio.Modulos.ModuloContato;
 using eAgenda.Infra.Modulos.ModuloContato;
 using FizzWare.NBuilder;
@@ -53,18 +54,34 @@ public class RepositorioContatoOrmTest : RepositorioOrmTestBase
 
         Contato contatoEditado = new("Thiago Kovalski", "Thiago@gmail.com", "(49) 98888-7777", "Dev", "NDD");
 
-        repositorioContato.Editar(contato.Id, contatoEditado);
+        bool conseguiuEditar = repositorioContato.Editar(contato.Id, contatoEditado);
 
         dbContext.ChangeTracker.Clear();
 
         Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
 
         Assert.IsNotNull(contatoSelecionado);
+        Assert.IsTrue(conseguiuEditar);
         Assert.AreEqual("Thiago Kovalski", contatoSelecionado.Nome);
         Assert.AreEqual("Thiago@gmail.com", contatoSelecionado.Email);
         Assert.AreEqual("(49) 98888-7777", contatoSelecionado.Telefone);
         Assert.AreEqual("Dev", contatoSelecionado.Cargo);
         Assert.AreEqual("NDD", contatoSelecionado.Empresa);
+    }
+    [TestMethod]
+    public void ExcluirContato_PersisteExclusao()
+    {
+        Contato contato = new("Victor Jeremias", "Victor@gmail.com", "(49) 98888-8888", null, null);
 
+        repositorioContato.Cadastrar(contato);
+
+        bool conseguiuExcluir = repositorioContato.Excluir(contato.Id);
+
+        dbContext.ChangeTracker.Clear();
+
+        Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
+
+        Assert.IsTrue(conseguiuExcluir);
+        Assert.IsNull(contatoSelecionado);
     }
 }

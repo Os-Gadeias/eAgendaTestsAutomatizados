@@ -68,6 +68,23 @@ public class ContatoTestE2E : E2ETestsBase
         await Expect(Page.GetByText("Pleno")).ToBeVisibleAsync();
         await Expect(Page.GetByText("Google")).ToBeVisibleAsync();
     }
+    [TestMethod]
+    public async Task ExcluirUsuario_Persiste_E_RemoveDaListagem()
+    {
+        await CadastrarUsuario();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Excluir" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        string rotaFinal = new Uri(Page.Url).AbsolutePath;
+        Assert.AreEqual("/Contato/Listar", rotaFinal);
+        await Expect(Page.GetByText("Thiago Kovalski")).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("thiagokovalski5@gmail.com")).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("(49) 99999-9999")).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("senior")).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("NDD")).Not.ToBeVisibleAsync();
+    }
     private async Task CadastrarUsuario()
     {
         await Page.GotoAsync(UrlBase + "/Contato/Cadastrar");

@@ -187,4 +187,22 @@ public class ServicoContatoTest
         Assert.IsTrue(resultado.IsSuccess);
         repositorioContato.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Contato>()), Times.Once);
     }
+    [TestMethod]
+    public void ExcluirContato_PersisteExclusao()
+    {
+        Mock<IRepositorioContato> repositorioContato = new();
+        Mock<IRepositorioCompromisso> repositorioCompromisso = new();
+        ServicoContato servicoContato = new(repositorioContato.Object, repositorioCompromisso.Object);
+
+        Contato contato = new("Victor Jeremias", "VictorJeremias@gmail.com", "(49) 98888-7777", "Senior", "Google");
+
+        repositorioContato.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(contato);
+        repositorioCompromisso.Setup(r => r.SelecionarTodos()).Returns([]);
+        repositorioContato.Setup(r => r.Excluir(It.IsAny<Guid>())).Returns(true);
+
+        Result resultado = servicoContato.Excluir(contato.Id);
+
+        Assert.IsTrue(resultado.IsSuccess);
+        repositorioContato.Verify(r => r.Excluir(It.IsAny<Guid>()), Times.Once);
+    }
 }
