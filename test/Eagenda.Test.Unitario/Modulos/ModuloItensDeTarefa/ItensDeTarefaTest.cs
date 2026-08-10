@@ -129,4 +129,24 @@ public class ItensDeTarefaTest
 
         Assert.AreEqual("Passar Perfume", tarefa.Itens.First().Titulo);
     }
+    [TestMethod]
+    public void RemoverItem_Atualiza_Porcentagem()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
+        ItemTarefa itemTarefa3 = new("Secar o Cachorro");
+        ItemTarefa itemTarefa4 = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
+        tarefa.AdicionarItem(itemTarefa2);
+        tarefa.AdicionarItem(itemTarefa3);
+        tarefa.AdicionarItem(itemTarefa4);
+
+        tarefa.RemoverItem(itemTarefa4.Id);
+
+        Assert.HasCount(3, tarefa.Itens);
+        Assert.AreEqual(33, tarefa.PercentualConcluido);
+    }
 }

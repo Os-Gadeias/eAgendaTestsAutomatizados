@@ -171,4 +171,37 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.AreEqual("Pegar o Condicionador", tarefaSelecionada.Itens[0].Titulo);
         Assert.AreEqual("Pegar o Shampoo", tarefaSelecionada.Itens[1].Titulo);
     }
+    [TestMethod]
+    public void RemoverItem_Atualiza_Porcentagem()
+    {
+
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
+        ItemTarefa itemTarefa3 = new("Secar o Cachorro");
+        ItemTarefa itemTarefa4 = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
+        tarefa.AdicionarItem(itemTarefa2);
+        tarefa.AdicionarItem(itemTarefa3);
+        tarefa.AdicionarItem(itemTarefa4);
+
+        repositorioTarefa.Cadastrar(tarefa);
+
+        Tarefa tarefaAtualizada = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        tarefaAtualizada.AdicionarItem(itemTarefa1);
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa1.Id, true);
+        tarefaAtualizada.AdicionarItem(itemTarefa2);
+        tarefaAtualizada.AdicionarItem(itemTarefa3);
+        tarefaAtualizada.AdicionarItem(itemTarefa4);
+
+        tarefaAtualizada.RemoverItem(itemTarefa4.Id);
+
+        bool conseguiuEditar = repositorioTarefa.Editar(tarefa.Id, tarefaAtualizada);
+
+        Assert.IsTrue(conseguiuEditar);
+        Assert.HasCount(3, tarefa.Itens);
+        Assert.AreEqual(33, tarefa.PercentualConcluido);
+    }
 }

@@ -6,7 +6,7 @@ using Moq;
 namespace Eagenda.Test.Unitario.Modulos.ModuloItensDeTarefa;
 
 [TestClass]
-public class ServicoItensDeTarfeaTest
+public class ServicoItensDeTarefaTest
 {
     [TestMethod]
     public void Add_Item_A_TarefaExistente_NaoRetornaErros()
@@ -170,5 +170,31 @@ public class ServicoItensDeTarfeaTest
         Assert.IsNotNull(resultado.Value);
         Assert.AreEqual("Pegar o Shampoo", tarefaSelecionada.Itens[0].Titulo);
         Assert.AreEqual("Pegar o Condicionador", tarefaSelecionada.Itens[1].Titulo);
+    }
+    [TestMethod]
+    public void RemoverItem_Atualiza_Porcentagem()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
+        ItemTarefa itemTarefa3 = new("Secar o Cachorro");
+        ItemTarefa itemTarefa4 = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
+        tarefa.AdicionarItem(itemTarefa2);
+        tarefa.AdicionarItem(itemTarefa3);
+        tarefa.AdicionarItem(itemTarefa4);
+
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+
+        Result resultado = servicoTarefa.RemoverItem(new(tarefa.Id, itemTarefa4.Id));
+
+        Assert.IsTrue(resultado.IsSuccess);
+        Assert.HasCount(3, tarefa.Itens);
+        Assert.AreEqual(33, tarefa.PercentualConcluido);
     }
 }
