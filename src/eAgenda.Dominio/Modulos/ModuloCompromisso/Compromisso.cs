@@ -43,8 +43,14 @@ public class Compromisso : EntidadeBase<Compromisso>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Assunto) || Assunto.Length < 2 || Assunto.Length > 100)
-            erros.Add("O campo \"Assunto\" deve conter entre 2 e 100 caracteres.");
+        if (string.IsNullOrWhiteSpace(Assunto))
+            erros.Add("O campo \"Assunto\" deve ser preenchido");
+
+        else if (Assunto.Length < 2)
+            erros.Add("O campo \"Assunto\" deve conter mais que 2 caracteres");
+
+        else if (Assunto.Length > 100)
+            erros.Add("O campo \"Assunto\" deve conter 100 ou menos caracteres");
 
         if (DataOcorrencia == default)
             erros.Add("O campo \"Data de Ocorrência\" deve ser preenchido.");
