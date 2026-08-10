@@ -197,4 +197,22 @@ public class ServicoItensDeTarefaTest
         Assert.HasCount(3, tarefa.Itens);
         Assert.AreEqual(33, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void Remover_UltimoItem_DaLista_ZeraAPorcentagem()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        tarefa.AdicionarItem(itemTarefa1);
+
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+
+        Result resultado = servicoTarefa.RemoverItem(new(tarefa.Id, itemTarefa1.Id));
+
+        Assert.HasCount(0, tarefa.Itens);
+        Assert.AreEqual(0, tarefa.PercentualConcluido);
+        Assert.IsFalse(tarefa.Concluida);
+    }
 }

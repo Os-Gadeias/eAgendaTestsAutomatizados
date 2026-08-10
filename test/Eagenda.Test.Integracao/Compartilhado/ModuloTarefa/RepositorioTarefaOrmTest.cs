@@ -174,7 +174,6 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
     [TestMethod]
     public void RemoverItem_Atualiza_Porcentagem()
     {
-
         Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
         ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
         ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
@@ -203,5 +202,30 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.IsTrue(conseguiuEditar);
         Assert.HasCount(3, tarefa.Itens);
         Assert.AreEqual(33, tarefa.PercentualConcluido);
+    }
+    [TestMethod]
+    public void RemoverUltimoITem_Atualiza_PorcentagemParaZero()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
+
+
+        repositorioTarefa.Cadastrar(tarefa);
+
+        Tarefa tarefaAtualizada = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        tarefaAtualizada.AdicionarItem(itemTarefa1);
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa1.Id, true);
+
+        tarefaAtualizada.RemoverItem(itemTarefa1.Id);
+
+        bool conseguiuEditar = repositorioTarefa.Editar(tarefa.Id, tarefaAtualizada);
+
+        Assert.IsTrue(conseguiuEditar);
+        Assert.HasCount(0, tarefa.Itens);
+        Assert.AreEqual(0, tarefa.PercentualConcluido);
     }
 }
