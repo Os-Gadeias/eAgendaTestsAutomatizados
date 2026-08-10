@@ -17,4 +17,17 @@ public class ItensDeTarefaTest
         Assert.AreSame(tarefa.Itens[0], itemTarefa);
         Assert.AreEqual("Pegar o Shampoo", tarefa.Itens[0].Titulo);
     }
+    [TestMethod]
+    public void Add_Item_A_TarefaExistente_SemTituloNosItens_RetornaErros()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa = new(string.Empty);
+
+        tarefa.AdicionarItem(itemTarefa);
+
+        List<string> erros = tarefa.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Título\" do Item Tarefa deve conter entre 2 e 100 caracteres.", erros.First());
+    }
 }

@@ -27,4 +27,23 @@ public class ServicoItensDeTarfeaTest
         Assert.AreEqual("Pegar Shampoo", tarefa.Itens.First().Titulo);
         repositorioTarefa.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>()), Times.Once);
     }
+    [TestMethod]
+    public void Add_Item_A_TarefaExistente_SemTitulo_RetornaErros()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa = new("lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+        repositorioTarefa.Setup(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>())).Returns(false);
+
+        Result resultado = servicoTarefa.AdicionarItem(new(tarefa.Id, string.Empty));
+
+        Assert.IsTrue(resultado.IsFailed);
+        Assert.HasCount(0, tarefa.Itens);
+        Assert.Contains("O campo", resultado.Errors.First().Message);
+        repositorioTarefa.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>()), Times.Never);
+    }
 }

@@ -21,7 +21,7 @@ public class ItemTarefa : EntidadeBase<ItemTarefa>
         List<string> erros = [];
 
         if (string.IsNullOrWhiteSpace(Titulo) || Titulo.Length < 2 || Titulo.Length > 100)
-            erros.Add("O campo \"Título\" deve conter entre 2 e 100 caracteres.");
+            erros.Add("O campo \"Título\" do Item Tarefa deve conter entre 2 e 100 caracteres.");
 
         return erros;
     }
