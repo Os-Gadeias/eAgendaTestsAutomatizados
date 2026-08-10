@@ -43,7 +43,7 @@ public class ServicoItensDeTarfeaTest
 
         Assert.IsTrue(resultado.IsFailed);
         Assert.HasCount(0, tarefa.Itens);
-        Assert.Contains("O campo", resultado.Errors.First().Message);
+        Assert.Contains("O campo \"Título\" do Item Tarefa é obrigatório!", resultado.Errors.First().Message);
         repositorioTarefa.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>()), Times.Never);
     }
 }

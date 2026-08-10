@@ -20,7 +20,10 @@ public class ItemTarefa : EntidadeBase<ItemTarefa>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Titulo) || Titulo.Length < 2 || Titulo.Length > 100)
+        if (string.IsNullOrWhiteSpace(Titulo))
+            erros.Add("O campo \"Título\" do Item Tarefa é obrigatório!");
+
+        else if (Titulo.Length < 2 || Titulo.Length > 100)
             erros.Add("O campo \"Título\" do Item Tarefa deve conter entre 2 e 100 caracteres.");
 
         return erros;
