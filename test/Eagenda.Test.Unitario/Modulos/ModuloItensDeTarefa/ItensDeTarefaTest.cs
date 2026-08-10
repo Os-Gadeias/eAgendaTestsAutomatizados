@@ -56,4 +56,23 @@ public class ItensDeTarefaTest
         Assert.HasCount(1, erros);
         Assert.AreEqual("O campo \"Título\" do Item Tarefa deve conter entre 2 e 100 caracteres.", erros.First());
     }
+    [TestMethod]
+    public void ListaComItens_AtualizaAPorcentagem_DeAcordoCom_OsItensConcluidos()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
+        ItemTarefa itemTarefa3 = new("Secar o Cachorro");
+        ItemTarefa itemTarefa4 = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AdicionarItem(itemTarefa2);
+        tarefa.AdicionarItem(itemTarefa3);
+        tarefa.AdicionarItem(itemTarefa4);
+
+        tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
+
+        Assert.AreEqual(25, tarefa.PercentualConcluido);
+        Assert.IsTrue(itemTarefa1.Concluido);
+    }
 }
