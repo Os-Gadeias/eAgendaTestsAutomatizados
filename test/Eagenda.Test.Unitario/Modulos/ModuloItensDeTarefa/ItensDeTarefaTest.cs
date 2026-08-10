@@ -117,4 +117,16 @@ public class ItensDeTarefaTest
 
         Assert.AreEqual(75, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void AlterarTitulo_DeTarefa_PersisteNaEdicao()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa = new("Pegar o Shampoo");
+        ItemTarefa itemAtualizado = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa);
+        tarefa.Itens.First().Atualizar(itemAtualizado);
+
+        Assert.AreEqual("Passar Perfume", tarefa.Itens.First().Titulo);
+    }
 }

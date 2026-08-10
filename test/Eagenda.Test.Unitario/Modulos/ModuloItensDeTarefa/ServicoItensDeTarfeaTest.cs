@@ -145,4 +145,5 @@ public class ServicoItensDeTarfeaTest
         Assert.IsTrue(tarefa.Itens[2].Concluido);
         Assert.IsFalse(tarefa.Itens[3].Concluido);
     }
+    
 }
