@@ -145,5 +145,30 @@ public class ServicoItensDeTarfeaTest
         Assert.IsTrue(tarefa.Itens[2].Concluido);
         Assert.IsFalse(tarefa.Itens[3].Concluido);
     }
-    
+    [TestMethod]
+    public void ListagemDeTarefas_RetornaItens_DaTarefa()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+
+        ItemTarefa item1 = new("Pegar o Shampoo");
+        tarefa.AdicionarItem(item1);
+
+        ItemTarefa item2 = new("Pegar o Condicionador");
+        tarefa.AdicionarItem(item2);
+
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+
+        Result<DetalhesTarefaDto> resultado = servicoTarefa.SelecionarPorId(tarefa.Id);
+
+        DetalhesTarefaDto tarefaSelecionada = resultado.Value;
+
+        Assert.IsTrue(resultado.IsSuccess);
+        Assert.IsNotNull(resultado.Value);
+        Assert.AreEqual("Pegar o Shampoo", tarefaSelecionada.Itens[0].Titulo);
+        Assert.AreEqual("Pegar o Condicionador", tarefaSelecionada.Itens[1].Titulo);
+    }
 }
