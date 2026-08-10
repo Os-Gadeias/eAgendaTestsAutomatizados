@@ -89,4 +89,45 @@ public class ItensTarefaTest2E2 : E2ETestsBase
 
         await Expect(Page.GetByText("100%")).ToHaveCountAsync(2);
     }
+    [TestMethod]
+    public async Task RemoverItem_Atualiza_Porcentagem()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Itens" }).ClickAsync();
+
+        await Page.GetByLabel("Novo Item").FillAsync("Pegar Shampoo");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Adicionar" }).ClickAsync();
+
+        await Page.GetByLabel("Novo Item").FillAsync("Pegar o Condicionador");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Adicionar" }).ClickAsync();
+
+        await Page.GetByLabel("Novo Item").FillAsync("Secar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Adicionar" }).ClickAsync();
+
+        await Page.GetByLabel("Novo Item").FillAsync("Passar Perfume");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Adicionar" }).ClickAsync();
+
+        var itemConcluido = Page
+            .GetByText("Pegar o Condicionador")
+            .Locator("../.."); //pega o elemento pai da div que o "Pegar Condicionador" está
+
+        await itemConcluido
+            .GetByRole(AriaRole.Button, new() { Name = "Concluir" })
+            .ClickAsync();
+
+        var itemRemovido = Page
+            .GetByText("Secar o Cachorro")
+            .Locator("../..");
+
+        await itemRemovido
+            .GetByRole(AriaRole.Button, new() { Name = "Remover" })
+            .ClickAsync();
+
+        await Expect(Page.GetByText("Secar o Cachorro")).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("33%")).ToHaveCountAsync(2);
+    }
 }
