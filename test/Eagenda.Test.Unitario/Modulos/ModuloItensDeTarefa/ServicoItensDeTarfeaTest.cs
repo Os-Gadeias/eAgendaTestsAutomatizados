@@ -87,4 +87,32 @@ public class ServicoItensDeTarfeaTest
         Assert.IsTrue(tarefa.Itens.First().Concluido);
         repositorioTarefa.Verify(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>()), Times.AtLeast(5));
     }
+    [TestMethod]
+    public void UltimoItemConcluido_AtualizaAPorcentagem_Para100_Porcento()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+        repositorioTarefa.Setup(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>())).Returns(true);
+
+        servicoTarefa.AdicionarItem(new(tarefa.Id, "Pegar o Shampoo"));
+        servicoTarefa.AdicionarItem(new(tarefa.Id, "Pegar o Condicionador"));
+        servicoTarefa.AdicionarItem(new(tarefa.Id, "Secar o Cachorro"));
+        servicoTarefa.AdicionarItem(new(tarefa.Id, "Passar Perfume"));
+
+        servicoTarefa.AlterarConclusaoItem(new(tarefa.Id, tarefa.Itens[0].Id, true));
+        servicoTarefa.AlterarConclusaoItem(new(tarefa.Id, tarefa.Itens[1].Id, true));
+        servicoTarefa.AlterarConclusaoItem(new(tarefa.Id, tarefa.Itens[2].Id, true));
+        servicoTarefa.AlterarConclusaoItem(new(tarefa.Id, tarefa.Itens[3].Id, true));
+
+        Assert.AreEqual(100, tarefa.PercentualConcluido);
+        Assert.IsTrue(tarefa.Itens[0].Concluido);
+        Assert.IsTrue(tarefa.Itens[1].Concluido);
+        Assert.IsTrue(tarefa.Itens[2].Concluido);
+        Assert.IsTrue(tarefa.Itens[3].Concluido);
+    }
 }
