@@ -48,8 +48,6 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
     [TestMethod]
     public void UltimoItemConcluido_AtualizaAPorcentagem_Para100_Porcento()
     {
-
-
         Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
 
         ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
@@ -86,5 +84,47 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
 
         Assert.IsNotNull(tarefaEditada);
         Assert.AreEqual(100, tarefaEditada.PercentualConcluido);
+    }
+    [TestMethod]
+    public void ReabrirItemConcluido_AtualizaAPorcentagem_Para75_Porcento()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
+        ItemTarefa itemTarefa3 = new("Secar o Cachorro");
+        ItemTarefa itemTarefa4 = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AdicionarItem(itemTarefa2);
+        tarefa.AdicionarItem(itemTarefa3);
+        tarefa.AdicionarItem(itemTarefa4);
+
+
+        Tarefa tarefaAtualizada = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        tarefaAtualizada.AdicionarItem(itemTarefa1);
+        tarefaAtualizada.AdicionarItem(itemTarefa2);
+        tarefaAtualizada.AdicionarItem(itemTarefa3);
+        tarefaAtualizada.AdicionarItem(itemTarefa4);
+
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa1.Id, true);
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa2.Id, true);
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa3.Id, true);
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa4.Id, true);
+
+        tarefaAtualizada.AlterarConclusaoItem(itemTarefa4.Id, false);
+
+        repositorioTarefa = new(dbContext);
+
+        repositorioTarefa.Cadastrar(tarefa);
+        dbContext.ChangeTracker.Clear();
+
+        repositorioTarefa.Editar(tarefa.Id, tarefaAtualizada);
+        dbContext.ChangeTracker.Clear();
+
+        Tarefa? tarefaEditada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+
+        Assert.IsNotNull(tarefaEditada);
+        Assert.AreEqual(75, tarefaEditada.PercentualConcluido);
     }
 }

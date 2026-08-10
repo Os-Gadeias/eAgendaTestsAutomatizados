@@ -96,4 +96,25 @@ public class ItensDeTarefaTest
 
         Assert.AreEqual(100, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void ReabrirItemConcluido_AtualizaAPorcentagem_Para75_Porcento()
+    {
+        Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
+        ItemTarefa itemTarefa2 = new("Pegar o Condicionador");
+        ItemTarefa itemTarefa3 = new("Secar o Cachorro");
+        ItemTarefa itemTarefa4 = new("Passar Perfume");
+
+        tarefa.AdicionarItem(itemTarefa1);
+        tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
+        tarefa.AdicionarItem(itemTarefa2);
+        tarefa.AlterarConclusaoItem(itemTarefa2.Id, true);
+        tarefa.AdicionarItem(itemTarefa3);
+        tarefa.AlterarConclusaoItem(itemTarefa3.Id, true);
+        tarefa.AdicionarItem(itemTarefa4);
+
+        tarefa.AlterarConclusaoItem(itemTarefa4.Id, false);
+
+        Assert.AreEqual(75, tarefa.PercentualConcluido);
+    }
 }
