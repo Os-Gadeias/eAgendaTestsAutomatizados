@@ -226,4 +226,26 @@ public sealed class TestesCompromisso
             erros.First()
         );
     }
+
+    [TestMethod]
+    public void Atualizar_Compromisso()
+    {
+        DateTime dataOcorrencia = DateTime.Now.Date;
+        Contato contato = new Contato("viti", "vitu@gmail.com", "49989091739", "DEV", "VitusFirma");
+        Compromisso compromisso = new Compromisso(new string('A', 22), dataOcorrencia, TimeSpan.FromHours(2), TimeSpan.FromHours(5), (TipoCompromisso)1, "casa", "LinkHttp", contato);
+
+        Contato contatoAtualizado = new Contato("vitus", "vitus@gmail.com", "49989091738", "Full", "VitusFirma");
+
+        compromisso.Atualizar(new Compromisso("Abacaxi", dataOcorrencia, TimeSpan.FromHours(1), TimeSpan.FromHours(8),
+                                    (TipoCompromisso)1, "cabare", "cabareLink", contatoAtualizado));
+
+        Assert.AreEqual("Abacaxi", compromisso.Assunto);
+        Assert.AreEqual(dataOcorrencia, compromisso.DataOcorrencia);
+        Assert.AreEqual(TimeSpan.FromHours(1), compromisso.HoraInicio);
+        Assert.AreEqual(TimeSpan.FromHours(8), compromisso.HoraTermino);
+        Assert.AreEqual(TipoCompromisso.Remoto, compromisso.Tipo);
+        Assert.AreEqual("cabare", compromisso.Local);
+        Assert.AreEqual("cabareLink", compromisso.Link);
+        Assert.AreEqual(contatoAtualizado, compromisso.Contato);
+    }
 }

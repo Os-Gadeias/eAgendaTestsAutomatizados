@@ -123,4 +123,22 @@ public sealed class TestesDespesa
             erros.First()
         );
     }
+
+    [TestMethod]
+    public void Atualizar_Despesa()
+    {
+        DateTime DataDeOcorrencia = DateTime.Now.Date;
+        Categoria categoria = new Categoria("Cachorro");
+        Categoria categoriaAtualizada = new Categoria("Gato");
+        Despesa despesa = new Despesa("Lavar o cachorro", DataDeOcorrencia, 22, FormaPagamento.AVista, new List<Categoria> { categoria });
+        var categoriasEsperadas = new List<Categoria> { categoriaAtualizada };
+
+        despesa.Atualizar(new Despesa("Lavar o Gato", DataDeOcorrencia, 11, FormaPagamento.Credito, new List<Categoria> { categoriaAtualizada }));
+
+        Assert.AreEqual("Lavar o Gato", despesa.Descricao);
+        Assert.AreEqual(DataDeOcorrencia, despesa.DataOcorrencia);
+        Assert.AreEqual(11, despesa.Valor);
+        Assert.AreEqual(FormaPagamento.Credito, despesa.FormaPagamento);
+        Assert.AreEqual("Gato", despesa.Categorias.First().Titulo);
+    }
 }
