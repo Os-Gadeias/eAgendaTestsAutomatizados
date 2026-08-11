@@ -240,4 +240,22 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.AreEqual("Lavar o cachorro", tarefaSelecionada.Titulo);
         Assert.AreEqual(PrioridadeTarefa.Alta, tarefaSelecionada.Prioridade);
     }
+    [TestMethod]
+    public void TarefaCriada_ComDataAtual_StatusPendente_SemPercentual_SemDataDeConclusao()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Cadastrar(tarefa);
+        dbContext.ChangeTracker.Clear();
+
+        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+
+        Assert.IsNotNull(tarefaSelecionada);
+        Assert.AreEqual("Lavar o cachorro", tarefaSelecionada.Titulo);
+        Assert.AreEqual(PrioridadeTarefa.Alta, tarefaSelecionada.Prioridade);
+        Assert.IsFalse(tarefa.Concluida);
+        Assert.AreEqual(0, tarefa.PercentualConcluido);
+        Assert.AreEqual(DateTime.Today, tarefa.DataCriacao);
+        Assert.IsNull(tarefa.DataConclusao);
+    }
 }

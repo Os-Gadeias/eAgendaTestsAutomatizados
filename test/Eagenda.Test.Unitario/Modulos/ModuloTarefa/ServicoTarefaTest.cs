@@ -19,6 +19,6 @@ public sealed class ServicoTarefaTest
 
         Assert.IsTrue(resultado.IsSuccess);
         repositorioTarefa.Verify(r => r.Cadastrar(It.IsAny<Tarefa>()), Times.Once);
-
     }
+
 }
