@@ -325,4 +325,18 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.AreEqual("Pegar Shampoo", tarefaSelecionada!.Titulo);
         Assert.AreEqual(PrioridadeTarefa.Baixa, tarefaSelecionada.Prioridade);
     }
+    [TestMethod]
+    public void ExcluirTarefaApaga_Registro_E_Itens()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Cadastrar(tarefa);
+        dbContext.ChangeTracker.Clear();
+
+        repositorioTarefa.Excluir(tarefa.Id);
+        dbContext.ChangeTracker.Clear();
+
+        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+        Assert.IsNull(tarefaSelecionada);
+    }
 }

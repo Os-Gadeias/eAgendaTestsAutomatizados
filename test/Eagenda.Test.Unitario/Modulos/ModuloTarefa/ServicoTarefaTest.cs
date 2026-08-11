@@ -115,4 +115,20 @@ public sealed class ServicoTarefaTest
         Assert.AreEqual("Lavar o Gato", tarefa.Titulo);
         Assert.AreEqual(PrioridadeTarefa.Baixa, tarefa.Prioridade);
     }
+    [TestMethod]
+    public void ExcluirTarefaApaga_Registro_E_Itens()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Setup(r => r.Excluir(It.IsAny<Guid>())).Returns(true);
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+
+        Result resultado = servicoTarefa.Excluir(tarefa.Id);
+
+        Assert.IsTrue(resultado.IsSuccess);
+        repositorioTarefa.Verify(r => r.Excluir(It.IsAny<Guid>()), Times.Once);
+    }
 }

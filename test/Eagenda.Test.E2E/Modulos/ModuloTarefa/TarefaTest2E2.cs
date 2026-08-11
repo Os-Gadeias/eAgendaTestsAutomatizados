@@ -77,5 +77,19 @@ public sealed class TarefaTest2E2 : E2ETestsBase
         await Expect(Page.GetByText("Pegar o Shampoo")).ToBeVisibleAsync();
         await Expect(Page.GetByText("Alta")).ToBeVisibleAsync();
     }
+    [TestMethod]
+    public async Task ExcluirTarefaApaga_Registro_E_Itens()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
 
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Excluir" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Expect(Page.GetByText("Lavar o Cachorro")).Not.ToBeVisibleAsync();
+
+    }
 }
