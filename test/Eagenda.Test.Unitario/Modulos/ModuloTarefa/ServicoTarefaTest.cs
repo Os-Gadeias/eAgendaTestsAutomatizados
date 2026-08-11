@@ -66,4 +66,21 @@ public sealed class ServicoTarefaTest
         Assert.AreEqual("O campo \"Prioridade\" deve ser preenchido.", resultado.Errors.First().Message);
         repositorioTarefa.Verify(r => r.Cadastrar(It.IsAny<Tarefa>()), Times.Never);
     }
+    [TestMethod]
+    public void TarefaConcluida_AlteraDataDeConclusao_E_Status()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+
+        servicoTarefa.AlterarConclusao(new(tarefa.Id, true));
+
+        Assert.IsTrue(tarefa.Concluida);
+        Assert.AreEqual(DateTime.Today, tarefa.DataConclusao);
+        Assert.AreEqual(100, tarefa.PercentualConcluido);
+    }
+    
 }

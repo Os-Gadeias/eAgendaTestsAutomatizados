@@ -66,4 +66,34 @@ public sealed class TarefaTest
         Assert.HasCount(1, erros);
         Assert.AreEqual("O campo \"Título\" deve conter entre 2 e 100 caracteres.", erros.First());
     }
+    [TestMethod]
+    public void TarefaCadastrada_ComTitulo100_NaoRetornaErro()
+    {
+        Tarefa tarefa = new(new string('a', 100), PrioridadeTarefa.Alta);
+
+        List<string> erros = tarefa.Validar();
+
+        Assert.HasCount(0, erros);
+    }
+    [TestMethod]
+    public void TarefaCadastrada_ComTitulo101_RetornaErro()
+    {
+        Tarefa tarefa = new(new string('a', 101), PrioridadeTarefa.Alta);
+
+        List<string> erros = tarefa.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Título\" deve conter entre 2 e 100 caracteres.", erros.First());
+    }
+    [TestMethod]
+    public void TarefaConcluida_AlteraDataDeConclusao_E_Status()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        tarefa.AlterarConclusaoManual(true);
+
+        Assert.IsTrue(tarefa.Concluida);
+        Assert.AreEqual(DateTime.Today, tarefa.DataConclusao);
+        Assert.AreEqual(100, tarefa.PercentualConcluido);
+    }
 }

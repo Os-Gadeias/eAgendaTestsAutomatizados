@@ -48,4 +48,16 @@ public sealed class TarefaTest2E2 : E2ETestsBase
         Assert.AreEqual("/Tarefa/Cadastrar", rotaAbsoluta);
         await Expect(Page.GetByText("O campo \"Título\" deve ser preenchido.")).ToBeVisibleAsync();
     }
+    [TestMethod]
+    public async Task TarefaConcluida_AlteraDataDeConclusao_E_Status()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Concluir" }).ClickAsync();
+        await Expect(Page.GetByText("100%")).ToBeInViewportAsync();
+
+    }
 }
