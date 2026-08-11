@@ -24,4 +24,16 @@ public sealed class TarefaTest
         Assert.AreEqual(DateTime.Today, tarefa.DataCriacao);
         Assert.IsNull(tarefa.DataConclusao);
     }
+    [TestMethod]
+    public void Tarefa_Cadastrada_Com_Os_Dois_Itens_Vinculados_E_Percentual_Em_0()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa item1 = new("Pegar Shampoo");
+        ItemTarefa item2 = new("Pegar Condicionador");
+        tarefa.AdicionarItem(item1);
+        tarefa.AdicionarItem(item2);
+
+        Assert.HasCount(2, tarefa.Itens);
+        Assert.AreEqual(0, tarefa.PercentualConcluido);
+    }
 }
