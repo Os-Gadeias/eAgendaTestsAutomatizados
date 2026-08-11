@@ -118,6 +118,6 @@ public sealed class TarefaTest
 
         Assert.AreEqual("Pegar Shampoo", tarefa.Titulo);
         Assert.AreEqual(PrioridadeTarefa.Baixa, tarefa.Prioridade);
-
+        
     }
 }

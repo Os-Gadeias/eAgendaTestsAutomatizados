@@ -189,4 +189,26 @@ public sealed class ServicoTarefaTest
         Assert.HasCount(1, dtos);
         Assert.IsTrue(dtos[0].Concluida);
     }
+    [TestMethod]
+    public void SelecionarTarefa_RetornaListaDeItens()
+    {
+        Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa item = new("Pegar Shampoo");
+        ItemTarefa item2 = new("Pegar Creme");
+
+        tarefa1.AdicionarItem(item);
+        tarefa1.AdicionarItem(item2);
+
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        repositorioTarefa.Setup(r => r.SelecionarTodos()).Returns([tarefa1]);
+
+        List<ListarTarefasDto> dtos = servicoTarefa.SelecionarTodos();
+
+        Assert.HasCount(2, dtos.First().Itens);
+        Assert.AreEqual("Pegar Shampoo", dtos[0].Itens[0].Titulo);
+        Assert.AreEqual("Pegar Creme", dtos[0].Itens[1].Titulo);
+    }
 }

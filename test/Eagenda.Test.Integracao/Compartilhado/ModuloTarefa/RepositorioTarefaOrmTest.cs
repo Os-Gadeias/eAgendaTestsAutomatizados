@@ -355,4 +355,23 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.IsTrue(tarefas[0].Concluida);
         Assert.IsFalse(tarefas[1].Concluida);
     }
+    [TestMethod]
+    public void SelecionarTarefa_RetornaListaDeItens()
+    {
+        Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        ItemTarefa item = new("Pegar Shampoo");
+        ItemTarefa item2 = new("Pegar Creme");
+
+        tarefa1.AdicionarItem(item);
+        tarefa1.AdicionarItem(item2);
+
+        repositorioTarefa.Cadastrar(tarefa1);
+        dbContext.ChangeTracker.Clear();
+
+        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa1.Id);
+
+        Assert.HasCount(2, tarefaSelecionada!.Itens);
+        Assert.AreEqual("Pegar Shampoo", tarefaSelecionada.Itens[1].Titulo);
+        Assert.AreEqual("Pegar Creme", tarefaSelecionada.Itens[0].Titulo);
+    }
 }
