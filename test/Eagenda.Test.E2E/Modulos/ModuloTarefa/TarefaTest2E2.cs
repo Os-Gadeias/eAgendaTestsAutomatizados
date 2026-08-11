@@ -90,6 +90,22 @@ public sealed class TarefaTest2E2 : E2ETestsBase
         await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
 
         await Expect(Page.GetByText("Lavar o Cachorro")).Not.ToBeVisibleAsync();
+    }
+    [TestMethod]
+    public async Task SelecionarTodosRetorna_Tarefas_EmAberto_E_Concluidas()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Concluir" }).ClickAsync();
+
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+        await Page.GetByLabel("Título").FillAsync("Lavar o Gato");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Expect(Page.GetByText("Pendente", new() { Exact = true })).ToHaveCountAsync(2);
+        await Expect(Page.GetByText("100%")).ToBeInViewportAsync();
 
     }
 }

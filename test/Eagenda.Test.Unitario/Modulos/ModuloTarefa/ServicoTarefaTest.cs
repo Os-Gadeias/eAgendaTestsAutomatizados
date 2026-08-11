@@ -131,4 +131,24 @@ public sealed class ServicoTarefaTest
         Assert.IsTrue(resultado.IsSuccess);
         repositorioTarefa.Verify(r => r.Excluir(It.IsAny<Guid>()), Times.Once);
     }
+    [TestMethod]
+    public void SelecionarTodosRetorna_Tarefas_EmAberto_E_Concluidas()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        tarefa1.AlterarConclusaoManual(true);
+
+        Tarefa tarefa2 = new("Lavar o Gato", PrioridadeTarefa.Normal);
+
+        repositorioTarefa.Setup(r => r.SelecionarTodos()).Returns([tarefa1, tarefa2]);
+
+        List<ListarTarefasDto> dtos = servicoTarefa.SelecionarTodos();
+
+        Assert.HasCount(2, dtos);
+        Assert.IsTrue(dtos[0].Concluida);
+        Assert.IsFalse(dtos[1].Concluida);
+    }
 }
