@@ -99,4 +99,20 @@ public sealed class ServicoTarefaTest
         Assert.IsNull(tarefa.DataConclusao);
         Assert.AreEqual(0, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void EditarTarefa_PersisteDados()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Setup(r => r.Editar(It.IsAny<Guid>(), It.IsAny<Tarefa>())).Returns(true);
+        repositorioTarefa.Setup(r => r.SelecionarPorId(It.IsAny<Guid>())).Returns(tarefa);
+
+        servicoTarefa.Editar(new(tarefa.Id, "Lavar o Gato", PrioridadeTarefa.Baixa));
+
+        Assert.AreEqual("Lavar o Gato", tarefa.Titulo);
+        Assert.AreEqual(PrioridadeTarefa.Baixa, tarefa.Prioridade);
+    }
 }

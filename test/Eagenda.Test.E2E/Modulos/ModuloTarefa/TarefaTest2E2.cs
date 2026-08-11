@@ -59,4 +59,23 @@ public sealed class TarefaTest2E2 : E2ETestsBase
         await Page.GetByRole(AriaRole.Button, new() { Name = "Concluir" }).ClickAsync();
         await Expect(Page.GetByText("100%")).ToBeInViewportAsync();
     }
+    [TestMethod]
+    public async Task EditarTarefa_Existente_RetornaNaListagem()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Editar" }).ClickAsync();
+
+        await Page.GetByLabel("Título").FillAsync("Pegar o Shampoo");
+        await Page.GetByLabel("Prioridade").SelectOptionAsync("Alta");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Expect(Page.GetByText("Pegar o Shampoo")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Alta")).ToBeVisibleAsync();
+    }
+
 }

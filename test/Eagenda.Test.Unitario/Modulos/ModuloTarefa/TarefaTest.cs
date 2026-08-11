@@ -108,4 +108,16 @@ public sealed class TarefaTest
         Assert.IsNull(tarefa.DataConclusao);
         Assert.AreEqual(0, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void EditarTarefa_PersisteDados()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        Tarefa tarefaAtualizada = new("Pegar Shampoo", PrioridadeTarefa.Baixa);
+
+        tarefa.Atualizar(tarefaAtualizada);
+
+        Assert.AreEqual("Pegar Shampoo", tarefa.Titulo);
+        Assert.AreEqual(PrioridadeTarefa.Baixa, tarefa.Prioridade);
+
+    }
 }
