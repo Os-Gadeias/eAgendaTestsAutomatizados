@@ -108,4 +108,42 @@ public sealed class TarefaTest2E2 : E2ETestsBase
         await Expect(Page.GetByText("100%")).ToBeInViewportAsync();
 
     }
+    [TestMethod]
+    public async Task SelecionarTodosRetorna_Tarefas_Pendentes()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Concluir" }).ClickAsync();
+
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+        await Page.GetByLabel("Título").FillAsync("Lavar o Gato");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Pendentes" }).ClickAsync();
+
+        await Expect(Page.GetByText("Pendente", new() { Exact = true })).ToHaveCountAsync(2);
+        await Expect(Page.GetByText("100%")).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("Concluída", new() { Exact = true })).Not.ToBeVisibleAsync();
+    }
+    [TestMethod]
+    public async Task SelecionarTodosRetorna_Tarefas_Concluidas()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Concluir" }).ClickAsync();
+
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+        await Page.GetByLabel("Título").FillAsync("Lavar o Gato");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Concluídas" }).ClickAsync();
+
+        await Expect(Page.GetByText("Pendente", new() { Exact = true })).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByText("100%")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Concluída", new() { Exact = true })).ToBeVisibleAsync();
+    }
 }

@@ -151,4 +151,42 @@ public sealed class ServicoTarefaTest
         Assert.IsTrue(dtos[0].Concluida);
         Assert.IsFalse(dtos[1].Concluida);
     }
+    [TestMethod]
+    public void SelecionarTodosRetorna_Tarefas_Pendentes()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        tarefa1.AlterarConclusaoManual(true);
+
+        Tarefa tarefa2 = new("Lavar o Gato", PrioridadeTarefa.Normal);
+
+        repositorioTarefa.Setup(r => r.SelecionarTodos()).Returns([tarefa1, tarefa2]);
+
+        List<ListarTarefasDto> dtos = servicoTarefa.SelecionarTodos("Pendentes");
+
+        Assert.HasCount(1, dtos);
+        Assert.IsFalse(dtos[0].Concluida);
+    }
+    [TestMethod]
+    public void SelecionarTodosRetorna_Tarefas_EmAberto()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+        tarefa1.AlterarConclusaoManual(true);
+
+        Tarefa tarefa2 = new("Lavar o Gato", PrioridadeTarefa.Normal);
+
+        repositorioTarefa.Setup(r => r.SelecionarTodos()).Returns([tarefa1, tarefa2]);
+
+        List<ListarTarefasDto> dtos = servicoTarefa.SelecionarTodos("Concluidas");
+
+        Assert.HasCount(1, dtos);
+        Assert.IsTrue(dtos[0].Concluida);
+    }
 }
