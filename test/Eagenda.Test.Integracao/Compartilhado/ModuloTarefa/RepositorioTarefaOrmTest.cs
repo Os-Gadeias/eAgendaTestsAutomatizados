@@ -209,10 +209,8 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Tarefa tarefa = new("Lavar o Cachorro", PrioridadeTarefa.Alta);
         ItemTarefa itemTarefa1 = new("Pegar o Shampoo");
 
-
         tarefa.AdicionarItem(itemTarefa1);
         tarefa.AlterarConclusaoItem(itemTarefa1.Id, true);
-
 
         repositorioTarefa.Cadastrar(tarefa);
 
@@ -227,5 +225,19 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.IsTrue(conseguiuEditar);
         Assert.HasCount(0, tarefa.Itens);
         Assert.AreEqual(0, tarefa.PercentualConcluido);
+    }
+    [TestMethod]
+    public void Cadastrar_Tarefa_ComDadosValidos_NaoRetornaErros()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        repositorioTarefa.Cadastrar(tarefa);
+        dbContext.ChangeTracker.Clear();
+
+        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+
+        Assert.IsNotNull(tarefaSelecionada);
+        Assert.AreEqual("Lavar o cachorro", tarefaSelecionada.Titulo);
+        Assert.AreEqual(PrioridadeTarefa.Alta, tarefaSelecionada.Prioridade);
     }
 }
