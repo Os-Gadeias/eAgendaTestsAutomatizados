@@ -96,4 +96,16 @@ public sealed class TarefaTest
         Assert.AreEqual(DateTime.Today, tarefa.DataConclusao);
         Assert.AreEqual(100, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void ReAbrirTarefaConcluida_AlteraDataDeConclusaoParaVazia_E_Status()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
+
+        tarefa.AlterarConclusaoManual(true);
+        tarefa.AlterarConclusaoManual(false);
+
+        Assert.IsFalse(tarefa.Concluida);
+        Assert.IsNull(tarefa.DataConclusao);
+        Assert.AreEqual(0, tarefa.PercentualConcluido);
+    }
 }

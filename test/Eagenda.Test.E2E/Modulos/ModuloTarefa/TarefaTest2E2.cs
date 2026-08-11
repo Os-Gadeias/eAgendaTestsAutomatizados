@@ -58,6 +58,5 @@ public sealed class TarefaTest2E2 : E2ETestsBase
 
         await Page.GetByRole(AriaRole.Button, new() { Name = "Concluir" }).ClickAsync();
         await Expect(Page.GetByText("100%")).ToBeInViewportAsync();
-
     }
 }

@@ -292,5 +292,21 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.AreEqual(DateTime.Today, tarefaSelecionada.DataConclusao);
         Assert.AreEqual(100, tarefaSelecionada.PercentualConcluido);
     }
+    [TestMethod]
+    public void ReAbrirTarefaConcluida_AlteraDataDeConclusaoParaVazia_E_Status()
+    {
+        Tarefa tarefa = new("Lavar o cachorro", PrioridadeTarefa.Alta);
 
+        tarefa.AlterarConclusaoManual(true);
+        tarefa.AlterarConclusaoManual(false);
+
+        repositorioTarefa.Cadastrar(tarefa);
+        dbContext.ChangeTracker.Clear();
+
+        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+
+        Assert.IsFalse(tarefaSelecionada!.Concluida);
+        Assert.IsNull(tarefaSelecionada.DataConclusao);
+        Assert.AreEqual(0, tarefaSelecionada.PercentualConcluido);
+    }
 }
