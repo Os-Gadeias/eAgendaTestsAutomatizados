@@ -90,7 +90,10 @@ public class Tarefa : EntidadeBase<Tarefa>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Titulo) || Titulo.Length < 2 || Titulo.Length > 100)
+        if (string.IsNullOrWhiteSpace(Titulo))
+            erros.Add("O Campo \"Título\" é obrigatório.");
+
+        else if (Titulo.Length < 2 || Titulo.Length > 100)
             erros.Add("O campo \"Título\" deve conter entre 2 e 100 caracteres.");
 
         if (!Enum.IsDefined(Prioridade))

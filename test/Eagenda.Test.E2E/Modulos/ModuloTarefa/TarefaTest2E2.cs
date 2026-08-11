@@ -38,5 +38,14 @@ public sealed class TarefaTest2E2 : E2ETestsBase
 
         await Expect(Page.GetByText("0%")).ToHaveCountAsync(2);
     }
+    [TestMethod]
+    public async Task TarefaCadastrada_SemTitulo_RetornaErro()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
 
+        string rotaAbsoluta = new Uri(Page.Url).AbsolutePath;
+        Assert.AreEqual("/Tarefa/Cadastrar", rotaAbsoluta);
+        await Expect(Page.GetByText("O campo \"Título\" deve ser preenchido.")).ToBeVisibleAsync();
+    }
 }

@@ -36,4 +36,24 @@ public sealed class TarefaTest
         Assert.HasCount(2, tarefa.Itens);
         Assert.AreEqual(0, tarefa.PercentualConcluido);
     }
+    [TestMethod]
+    public void TarefaCadastrada_SemTitulo_RetornaErro()
+    {
+        Tarefa tarefa = new(string.Empty, PrioridadeTarefa.Baixa);
+
+        List<string> erros = tarefa.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O Campo \"Título\" é obrigatório.", erros.First());
+    }
+    [TestMethod]
+    public void TarefaCadastrada_SemPrioridade_RetornaErro()
+    {
+        Tarefa tarefa = new("lavar o cachorro", (PrioridadeTarefa)5);
+
+        List<string> erros = tarefa.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Prioridade\" deve ser preenchido.", erros.First());
+    }
 }

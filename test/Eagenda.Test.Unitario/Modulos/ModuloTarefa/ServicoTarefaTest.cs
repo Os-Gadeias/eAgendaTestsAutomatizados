@@ -40,5 +40,30 @@ public sealed class ServicoTarefaTest
         Assert.AreEqual(DateTime.Today, tarefaSelecionada.DataCriacao);
         Assert.IsNull(tarefaSelecionada.DataConclusao);
     }
+    [TestMethod]
+    public void TarefaCadastrada_SemTitulo_RetornaErro()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
 
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Result resultado = servicoTarefa.Cadastrar(new(string.Empty, PrioridadeTarefa.Alta));
+
+        Assert.IsTrue(resultado.IsFailed);
+        Assert.AreEqual("O Campo \"Título\" é obrigatório.", resultado.Errors.First().Message);
+        repositorioTarefa.Verify(r => r.Cadastrar(It.IsAny<Tarefa>()), Times.Never);
+    }
+    [TestMethod]
+    public void TarefaCadastrada_SemPrioridade_RetornaErro()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Result resultado = servicoTarefa.Cadastrar(new("Lavar o Cachorro", (PrioridadeTarefa)5));
+
+        Assert.IsTrue(resultado.IsFailed);
+        Assert.AreEqual("O campo \"Prioridade\" deve ser preenchido.", resultado.Errors.First().Message);
+        repositorioTarefa.Verify(r => r.Cadastrar(It.IsAny<Tarefa>()), Times.Never);
+    }
 }
