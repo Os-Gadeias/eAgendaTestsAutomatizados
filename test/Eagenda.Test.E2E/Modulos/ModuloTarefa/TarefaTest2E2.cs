@@ -119,6 +119,7 @@ public sealed class TarefaTest2E2 : E2ETestsBase
 
         await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
         await Page.GetByLabel("Título").FillAsync("Lavar o Gato");
+
         await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
 
         await Page.GetByRole(AriaRole.Link, new() { Name = "Pendentes" }).ClickAsync();
@@ -145,5 +146,29 @@ public sealed class TarefaTest2E2 : E2ETestsBase
         await Expect(Page.GetByText("Pendente", new() { Exact = true })).Not.ToBeVisibleAsync();
         await Expect(Page.GetByText("100%")).ToBeVisibleAsync();
         await Expect(Page.GetByText("Concluída", new() { Exact = true })).ToBeVisibleAsync();
+    }
+    [TestMethod]
+    public async Task SelecionarTodosRetorna_Tarefas_PorPrioridade()
+    {
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+
+        await Page.GetByLabel("Título").FillAsync("Lavar o Cachorro");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+        await Page.GetByLabel("Título").FillAsync("Lavar o Gato");
+        await Page.GetByLabel("Prioridade").SelectOptionAsync("Alta");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GotoAsync(UrlBase + "/Tarefa/Cadastrar");
+        await Page.GetByLabel("Título").FillAsync("Lavar o Thanos");
+        await Page.GetByLabel("Prioridade").SelectOptionAsync("Baixa");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Confirmar" }).ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Prioridade" }).ClickAsync();
+        await Expect(Page.GetByText("Normal")).ToHaveCountAsync(2);
+        await Expect(Page.GetByText("Alta")).ToHaveCountAsync(2);
+        await Expect(Page.GetByText("Baixa")).ToHaveCountAsync(2);
+
     }
 }
