@@ -56,4 +56,14 @@ public sealed class TarefaTest
         Assert.HasCount(1, erros);
         Assert.AreEqual("O campo \"Prioridade\" deve ser preenchido.", erros.First());
     }
+    [TestMethod]
+    public void TarefaCadastrada_ComTituloPequeno()
+    {
+        Tarefa tarefa = new("a", PrioridadeTarefa.Alta);
+
+        List<string> erros = tarefa.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual("O campo \"Título\" deve conter entre 2 e 100 caracteres.", erros.First());
+    }
 }
