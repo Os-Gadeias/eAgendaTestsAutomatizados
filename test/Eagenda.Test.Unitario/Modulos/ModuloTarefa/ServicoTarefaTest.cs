@@ -20,5 +20,25 @@ public sealed class ServicoTarefaTest
         Assert.IsTrue(resultado.IsSuccess);
         repositorioTarefa.Verify(r => r.Cadastrar(It.IsAny<Tarefa>()), Times.Once);
     }
+    [TestMethod]
+    public void TarefaCriada_ComDataAtual_StatusPendente_SemPercentual_SemDataDeConclusao()
+    {
+        Mock<IRepositorioTarefa> repositorioTarefa = new();
+
+        ServicoTarefa servicoTarefa = new(repositorioTarefa.Object);
+
+        Tarefa? tarefaSelecionada = null!;
+
+        repositorioTarefa.Setup(r => r.Cadastrar(It.IsAny<Tarefa>())).Callback<Tarefa>(t => tarefaSelecionada = t);
+
+        Result resultado = servicoTarefa.Cadastrar(new("lavar o cachorro", PrioridadeTarefa.Alta));
+
+        Assert.IsTrue(resultado.IsSuccess);
+        repositorioTarefa.Verify(r => r.Cadastrar(It.IsAny<Tarefa>()), Times.Once);
+        Assert.IsFalse(tarefaSelecionada.Concluida);
+        Assert.AreEqual(0, tarefaSelecionada.PercentualConcluido);
+        Assert.AreEqual(DateTime.Today, tarefaSelecionada.DataCriacao);
+        Assert.IsNull(tarefaSelecionada.DataConclusao);
+    }
 
 }
