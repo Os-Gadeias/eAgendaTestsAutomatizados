@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using eAgenda.Dominio.Modulos.ModuloCategoria;
 
 [TestClass]
@@ -42,5 +43,16 @@ public sealed class TestesCategoria
             "O campo \"Titulo\" deve comter menos que 100 caracteres!",
             erros.First()
         );
+    }
+
+    [TestMethod]
+    public void Atualizar_Categoria()
+    {
+        Categoria categoria = new Categoria("Cachorro");
+        Categoria categoriaAlualizada = new Categoria("Gato");
+
+        categoria.Atualizar(categoriaAlualizada);
+
+        Assert.AreEqual(categoriaAlualizada.Titulo, categoria.Titulo);
     }
 }
