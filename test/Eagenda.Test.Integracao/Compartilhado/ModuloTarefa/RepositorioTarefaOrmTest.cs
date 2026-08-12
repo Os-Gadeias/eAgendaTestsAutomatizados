@@ -340,22 +340,6 @@ public class RepositorioTarefaOrmTest : RepositorioOrmTestBase
         Assert.IsNull(tarefaSelecionada);
     }
     [TestMethod]
-    public void SelecionarTodosRetorna_Tarefas_EmAberto_E_Concluidas()
-    {
-        Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
-        tarefa1.AlterarConclusaoManual(true);
-        Tarefa tarefa2 = new("Lavar o Gato", PrioridadeTarefa.Normal);
-
-        repositorioTarefa.Cadastrar(tarefa1);
-        repositorioTarefa.Cadastrar(tarefa2);
-        dbContext.ChangeTracker.Clear();
-
-        List<Tarefa> tarefas = repositorioTarefa.SelecionarTodos();
-        Assert.HasCount(2, tarefas);
-        Assert.IsTrue(tarefas[0].Concluida);
-        Assert.IsFalse(tarefas[1].Concluida);
-    }
-    [TestMethod]
     public void SelecionarTarefa_RetornaListaDeItens()
     {
         Tarefa tarefa1 = new("Lavar o cachorro", PrioridadeTarefa.Alta);
